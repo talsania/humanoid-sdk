@@ -3,7 +3,7 @@ from humanoid_sdk import DynamixelRobot  # Replace with your actual module name
 
 def main():
     print("🤖 Initializing Robot...")
-    robot = DynamixelRobot("/dev/cu.usbserial-FT88Z0EM")  # Update port if needed
+    robot = DynamixelRobot("/dev/ttyUSB0")  # Update port if needed
     robot.set_all_profiles(acceleration=50, velocity=20)
 
     print("\n🏠 Moving to home pose...")
@@ -11,7 +11,7 @@ def main():
     time.sleep(4)
 
     # print("\n🚶 Moving to prepose...")
-    # robot.prepose()
+    #   # robot.prepose()
     # time.sleep(4)
 
     # print("\n🕺 Pose 1 - Dance start!")
