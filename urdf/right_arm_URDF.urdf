@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="right_arm_URDF">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.0037770582145105 3.88556369317198E-05 -0.172672466710726"
+        rpy="0 0 0" />
+      <mass
+        value="5.9028025886278" />
+      <inertia
+        ixx="0.22526915301125"
+        ixy="1.39710828126589E-05"
+        ixz="-0.00459702042142445"
+        iyy="0.179623680457409"
+        iyz="8.01873931509789E-06"
+        izz="0.0829719390497794" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.6 0.6 0.6 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="right_shoulder_1">
+    <inertial>
+      <origin
+        xyz="-0.00498215647893118 0.0137616146087366 -0.0587574888680724"
+        rpy="0 0 0" />
+      <mass
+        value="0.358747412616118" />
+      <inertia
+        ixx="0.00104417521358521"
+        ixy="2.43737115789025E-07"
+        ixz="-2.12763691090865E-06"
+        iyy="0.000472659404210992"
+        iyz="2.81188938611361E-05"
+        izz="0.000898654043890314" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_shoulder_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_shoulder_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j11"
+    type="revolute">
+    <origin
+      xyz="0 -0.206244975000007 -0.0122500000000135"
+      rpy="1.5707963267949 0 3.14159265358979" />
+    <parent
+      link="base_link" />
+    <child
+      link="right_shoulder_1" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-1.571"
+      upper="1.571"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="right_shoulder_2">
+    <inertial>
+      <origin
+        xyz="-6.73325330163288E-05 -0.0178133834509994 -0.00264857656869381"
+        rpy="0 0 0" />
+      <mass
+        value="0.0788967649028125" />
+      <inertia
+        ixx="2.49703186314024E-05"
+        ixy="-6.29890723815443E-09"
+        ixz="1.29775866565855E-09"
+        iyy="1.49488308477605E-05"
+        iyz="2.11248808728775E-06"
+        izz="2.56896410530108E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_shoulder_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_shoulder_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j12"
+    type="revolute">
+    <origin
+      xyz="0 0.000324623368866475 -0.0970303585666253"
+      rpy="-1.5707963267949 -1.57015699455256 1.5707963267949" />
+    <parent
+      link="right_shoulder_1" />
+    <child
+      link="right_shoulder_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.22"
+      upper="0.105"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="right_shoulder_3">
+    <inertial>
+      <origin
+        xyz="0.000430433929476714 -0.109894765422854 0.000393694393193644"
+        rpy="0 0 0" />
+      <mass
+        value="0.401306132014166" />
+      <inertia
+        ixx="0.000940757343541795"
+        ixy="1.37520778100829E-05"
+        ixz="1.53363764794489E-05"
+        iyy="0.000500469687891597"
+        iyz="-4.60242595160868E-06"
+        izz="0.00103063033082381" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_shoulder_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 0.937254901960784 0.137254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_shoulder_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j13"
+    type="revolute">
+    <origin
+      xyz="-0.000197322450632975 -0.0552057468871058 0.00797500000025222"
+      rpy="0.00127866448471928 1.5707963267949 0" />
+    <parent
+      link="right_shoulder_2" />
+    <child
+      link="right_shoulder_3" />
+    <axis
+      xyz="0 0.999999182508679 -0.00127866413627633" />
+    <limit
+      lower="-1.571"
+      upper="1.571"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="right_elbow_1">
+    <inertial>
+      <origin
+        xyz="-0.00792320443264116 0.0623876112674557 0.00257307614356453"
+        rpy="0 0 0" />
+      <mass
+        value="0.164684756558366" />
+      <inertia
+        ixx="0.000106256537668795"
+        ixy="4.7039782753727E-06"
+        ixz="-3.00034670234032E-06"
+        iyy="0.000157286928748668"
+        iyz="4.71514134091977E-07"
+        izz="0.000136959034265782" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_elbow_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_elbow_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j14"
+    type="revolute">
+    <origin
+      xyz="0.000100000000253023 -0.224696856366736 0"
+      rpy="1.5707963267949 -1.56951766231018 1.5707963267949" />
+    <parent
+      link="right_shoulder_3" />
+    <child
+      link="right_elbow_1" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="-1.0472"
+      upper="1.309"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="right_elbow_2">
+    <inertial>
+      <origin
+        xyz="0.000818777177861829 0.0816791761599194 -0.000857056126088719"
+        rpy="0 0 0" />
+      <mass
+        value="0.237392378321504" />
+      <inertia
+        ixx="0.00029631988680438"
+        ixy="-1.5245771891154E-07"
+        ixz="1.45924985242579E-07"
+        iyy="0.000157802420853618"
+        iyz="-2.71639401764095E-06"
+        izz="0.000298542738588507" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_elbow_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_elbow_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j15"
+    type="revolute">
+    <origin
+      xyz="-1.83717277871809E-05 0.101985602391172 0.00019732244229459"
+      rpy="3.14159265358979 0 3.14159265358979" />
+    <parent
+      link="right_elbow_1" />
+    <child
+      link="right_elbow_2" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-1.57"
+      upper="1.57"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="right_wrist_1">
+    <inertial>
+      <origin
+        xyz="-0.00363416239539688 -0.0222541766679796 0.00363418616749818"
+        rpy="0 0 0" />
+      <mass
+        value="0.0225938557953762" />
+      <inertia
+        ixx="5.04671811423024E-06"
+        ixy="-1.40162779340714E-13"
+        ixz="5.69823476304623E-07"
+        iyy="2.14643808296516E-06"
+        iyz="9.00537592981696E-13"
+        izz="5.01430848047236E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_wrist_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_wrist_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j16"
+    type="revolute">
+    <origin
+      xyz="0.000338552314752161 0.147652253083333 0.000497322442299319"
+      rpy="0 0 3.14095332134742" />
+    <parent
+      link="right_elbow_2" />
+    <child
+      link="right_wrist_1" />
+    <axis
+      xyz="-0.999999795627149 -0.000639332198812096 0" />
+    <limit
+      lower="-0.52"
+      upper="0.52"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="right_wrist_2">
+    <inertial>
+      <origin
+        xyz="0.000439259067155306 -0.0569085161540602 -0.00250947151873959"
+        rpy="0 0 0" />
+      <mass
+        value="0.20298498678678" />
+      <inertia
+        ixx="0.000118675848405242"
+        ixy="7.09790847455237E-08"
+        ixz="7.42215259712281E-14"
+        iyy="0.000142547035444907"
+        iyz="2.12775473155197E-08"
+        izz="0.000116701102404343" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_wrist_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.6 0.6 0.6 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_wrist_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="j17"
+    type="revolute">
+    <origin
+      xyz="0.000494644890471518 -0.0450001174205644 -0.000127322447598478"
+      rpy="0 0 0" />
+    <parent
+      link="right_wrist_1" />
+    <child
+      link="right_wrist_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.571"
+      upper="1.571"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="right_finger_1">
+    <inertial>
+      <origin
+        xyz="-0.0128841580508815 0.0341204574596806 -0.0109116869185103"
+        rpy="0 0 0" />
+      <mass
+        value="0.0609022599124917" />
+      <inertia
+        ixx="4.82024505958164E-05"
+        ixy="-3.17406017338133E-07"
+        ixz="1.70407872657134E-06"
+        iyy="2.31897349198971E-05"
+        iyz="3.40739906139007E-06"
+        izz="3.67679960822001E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_finger_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_finger_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f18"
+    type="prismatic">
+    <origin
+      xyz="-0.0472293186770806 -0.0797999999999117 0.012800000000167"
+      rpy="0 0 3.14159265358979" />
+    <parent
+      link="right_wrist_2" />
+    <child
+      link="right_finger_1" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="0"
+      upper="0.024"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="right_finger_2">
+    <inertial>
+      <origin
+        xyz="-0.0128841580735367 0.0341204574596168 -0.0109116869118019"
+        rpy="0 0 0" />
+      <mass
+        value="0.0609022599124919" />
+      <inertia
+        ixx="4.82024505958166E-05"
+        ixy="-3.17406017338123E-07"
+        ixz="1.70407872657131E-06"
+        iyy="2.31897349198971E-05"
+        iyz="3.40739906139007E-06"
+        izz="3.67679960822002E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_finger_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://myrobot_description/meshes/right_finger_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="f19"
+    type="prismatic">
+    <origin
+      xyz="0.0480618808715608 -0.0797999999999758 -0.0127999999994104"
+      rpy="3.14159265358979 0 0" />
+    <parent
+      link="right_wrist_2" />
+    <child
+      link="right_finger_2" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.024"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>
