@@ -1,0 +1,65 @@
+<mujoco model="right_arm_URDF">
+  <compiler angle="radian"/>
+
+  <asset>
+    <mesh name="base_link" content_type="model/stl" file="base_link.STL"/>
+    <mesh name="right_shoulder_1" content_type="model/stl" file="right_shoulder_1.STL"/>
+    <mesh name="right_shoulder_2" content_type="model/stl" file="right_shoulder_2.STL"/>
+    <mesh name="right_shoulder_3" content_type="model/stl" file="right_shoulder_3.STL"/>
+    <mesh name="right_elbow_1" content_type="model/stl" file="right_elbow_1.STL"/>
+    <mesh name="right_elbow_2" content_type="model/stl" file="right_elbow_2.STL"/>
+    <mesh name="right_wrist_1" content_type="model/stl" file="right_wrist_1.STL"/>
+    <mesh name="right_wrist_2" content_type="model/stl" file="right_wrist_2.STL"/>
+    <mesh name="right_finger_1" content_type="model/stl" file="right_finger_1.STL"/>
+    <mesh name="right_finger_2" content_type="model/stl" file="right_finger_2.STL"/>
+  </asset>
+
+  <worldbody>
+    <geom type="mesh" rgba="0.6 0.6 0.6 1" mesh="base_link"/>
+    <body name="right_shoulder_1" pos="0 -0.206245 -0.01225" quat="0 0 0.707107 0.707107">
+      <inertial pos="-0.00498216 0.0137616 -0.0587575" quat="0.729908 0.683506 0.00525435 -0.00512273" mass="0.358747" diaginertia="0.00104421 0.000900471 0.000470811"/>
+      <joint name="j11" pos="0 0 0" axis="0 0 -1" range="-1.571 1.571"/>
+      <geom type="mesh" rgba="0.898039 0.917647 0.929412 1" mesh="right_shoulder_1"/>
+      <body name="right_shoulder_2" pos="0 0.000324623 -0.0970304" quat="0.707107 -0.000226038 -0.707107 0.000226038">
+        <inertial pos="-6.73325e-05 -0.0178134 -0.00264858" quat="0.544748 0.450882 -0.451177 0.544421" mass="0.0788968" diaginertia="2.60902e-05 2.49703e-05 1.45483e-05"/>
+        <joint name="j12" pos="0 0 0" axis="0 0 1" range="-1.22 0.105"/>
+        <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="right_shoulder_2"/>
+        <body name="right_shoulder_3" pos="-0.000197322 -0.0552057 0.007975" quat="0.707107 0.000452076 0.707107 -0.000452076">
+          <inertial pos="0.000430434 -0.109895 0.000393694" quat="0.529345 0.548931 -0.451071 0.463685" mass="0.401306" diaginertia="0.00103319 0.00093868 0.000499992"/>
+          <joint name="j13" pos="0 0 0" axis="0 0.999999 -0.00127866" range="-1.571 1.571"/>
+          <geom type="mesh" rgba="1 0.937255 0.137255 1" mesh="right_shoulder_3"/>
+          <body name="right_elbow_1" pos="0.0001 -0.224697 0" quat="0.000452076 0.707107 0.000452076 0.707107">
+            <inertial pos="-0.0079232 0.0623876 0.00257308" quat="0.544449 0.498809 0.450764 0.501574" mass="0.164685" diaginertia="0.000157719 0.000137249 0.000105534"/>
+            <joint name="j14" pos="0 0 0" axis="-1 0 0" range="-1.0472 1.309"/>
+            <geom type="mesh" rgba="0.898039 0.917647 0.929412 1" mesh="right_elbow_1"/>
+            <body name="right_elbow_2" pos="-1.83717e-05 0.101986 0.000197322" quat="0 0 1 0">
+              <inertial pos="0.000818777 0.0816792 -0.000857056" quat="0.511258 0.52069 -0.488392 0.478508" mass="0.237392" diaginertia="0.000298605 0.00029631 0.00015775"/>
+              <joint name="j15" pos="0 0 0" axis="0 1 0" range="-1.57 1.57"/>
+              <geom type="mesh" rgba="0.898039 0.917647 0.929412 1" mesh="right_elbow_2"/>
+              <body name="right_wrist_1" pos="0.000338552 0.147652 0.000497322" quat="0.000319666 0 0 1">
+                <inertial pos="-0.00363416 -0.0222542 0.00363419" quat="0.655188 0.655188 -0.265948 0.265948" mass="0.0225939" diaginertia="5.60057e-06 4.46046e-06 2.14644e-06"/>
+                <joint name="j16" pos="0 0 0" axis="-1 -0.000639332 0" range="-0.52 0.52"/>
+                <geom type="mesh" rgba="0.898039 0.917647 0.929412 1" mesh="right_wrist_1"/>
+                <body name="right_wrist_2" pos="0.000494645 -0.0450001 -0.000127322">
+                  <inertial pos="0.000439259 -0.0569085 -0.00250947" quat="0.708157 0.000301956 -0.000280192 0.706055" mass="0.202985" diaginertia="0.000142547 0.000118676 0.000116701"/>
+                  <joint name="j17" pos="0 0 0" axis="0 0 1" range="-1.571 1.571"/>
+                  <geom type="mesh" rgba="0.6 0.6 0.6 1" mesh="right_wrist_2"/>
+                  <body name="right_finger_1" pos="-0.0472293 -0.0798 0.0128" quat="0 0 0 1">
+                    <inertial pos="-0.0128842 0.0341205 -0.0109117" quat="0.783744 0.61672 -0.0554139 0.0482728" mass="0.0609023" diaginertia="4.84523e-05 3.73444e-05 2.23635e-05"/>
+                    <joint name="f18" pos="0 0 0" axis="-1 0 0" type="slide" range="0 0.024"/>
+                    <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="right_finger_1"/>
+                  </body>
+                  <body name="right_finger_2" pos="0.0480619 -0.0798 -0.0128" quat="0 1 0 0">
+                    <inertial pos="-0.0128842 0.0341205 -0.0109117" quat="0.783744 0.61672 -0.0554139 0.0482728" mass="0.0609023" diaginertia="4.84523e-05 3.73444e-05 2.23635e-05"/>
+                    <joint name="f19" pos="0 0 0" axis="1 0 0" type="slide" range="-0.024 0"/>
+                    <geom type="mesh" rgba="0.792157 0.819608 0.933333 1" mesh="right_finger_2"/>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

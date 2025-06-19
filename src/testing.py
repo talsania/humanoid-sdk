@@ -3,12 +3,15 @@ from humanoid_sdk import DynamixelRobot  # Replace with your actual module name
 
 def main():
     print("🤖 Initializing Robot...")
-    robot = DynamixelRobot("/dev/ttyUSB0")  # Update port if needed
-    robot.set_all_profiles(acceleration=50, velocity=20)
 
-    print("\n🏠 Moving to home pose...")
-    robot.prepose()
-    time.sleep(4)
+    robot = DynamixelRobot(simulation_only=True)
+    robot.move_right_hand_cartesian(0.4, 0.3, 0.4)
+    robot.move_left_hand_cartesian(0, 0.0, 0)
+    time.sleep(10)
+    # robot = DynamixelRobot("/dev/ttyUSB0")  # Update port if needed
+
+    # print("\n🏠 Moving to home pose...")
+    # time.sleep(4)
 
     # print("\n🚶 Moving to prepose...")
     #   # robot.prepose()
@@ -30,13 +33,17 @@ def main():
     # robot.move_left_hand_joints(2200, 2100, 2000, 1900, 1800, 1700, 1600)
     # time.sleep(4)
 
-    print("\n🧭 Moving RIGHT arm in Cartesian space...")
-    robot.move_right_hand_cartesian(0.021,-0.355,-0.666)
-    time.sleep(5)
 
-    print("\n🧭 Moving LEFT arm in Cartesian space...")
-    robot.move_left_hand_cartesian(0.021,0.355,-0.666)
-    time.sleep(5)
+    # robot.simulate_right_ik_to(0.25, -0.1, 0.2)
+    # robot.simulate_left_ik_to(0.25, 0.1, 0.2)
+
+    # print("\n🧭 Moving RIGHT arm in Cartesian space...")
+    # robot.move_right_hand_cartesian(0.2, -0.1, 0.3)
+    # time.sleep(5)
+
+    # print("\n🧭 Moving LEFT arm in Cartesian space...")
+    # robot.move_left_hand_cartesian(0.2,  0.1, 0.3)
+    # time.sleep(5)
 
     # print("\n✋ Opening RIGHT gripper...")
     # robot.open_right_hand_gripper()

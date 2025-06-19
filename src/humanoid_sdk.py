@@ -1,10 +1,15 @@
 import os
 import time
 import math
+import numpy as np
 import serial.tools.list_ports
 from dynamixel_sdk import PortHandler, PacketHandler, GroupSyncWrite
 from ikpy.chain import Chain
 import json
+import mujoco
+import mink
+import mujoco.viewer
+from loop_rate_limiters import RateLimiter
 
 # Control table addresses for Protocol 2.0
 ADDR_TORQUE_ENABLE        = 64
@@ -40,8 +45,10 @@ class DynamixelRobot:
         protocol_version: float = 2.0,
         right_urdf: str = 'urdf/right_arm_URDF.urdf',
         left_urdf:  str = 'urdf/left_arm_URDF.urdf',
+        simulation_only=False
     ):
 
+        self.simulation_only = simulation_only
         # Auto-detect or verify serial port
         if not device_name:
             ports = list_available_ports()
@@ -51,13 +58,14 @@ class DynamixelRobot:
             device_name = ports[0]
             print(f"Auto-selecting port: {device_name}")
 
-        # Initialize Port & Packet handlers
-        self.port   = PortHandler(device_name)
-        self.packet = PacketHandler(protocol_version)
-        if not self.port.openPort():
-            raise IOError(f"Could not open port {device_name}")
-        if not self.port.setBaudRate(baud_rate):
-            raise IOError(f"Could not set baud rate to {baud_rate}")
+        if not self.simulation_only:
+            self.port   = PortHandler(device_name)
+            self.packet = PacketHandler(protocol_version)
+            if not self.port.openPort():
+                raise IOError(f"Could not open port {device_name}")
+            if not self.port.setBaudRate(baud_rate):
+                raise IOError(f"Could not set baud rate to {baud_rate}")
+
 
         # Joint IDs
         self.right_ids = [11,12,13,14,15,16,17]
@@ -69,9 +77,11 @@ class DynamixelRobot:
         self.sequence_file = "saved_sequences.json"
         self.load_sequences()
 
+        
 
-        # Enable torque on all joints by default
-        self.torque_on_all()
+        # Enable torque only if using hardware
+        if not self.simulation_only:
+            self.torque_on_all()
 
         # Predefined poses (in ticks)
         self.poses = {
@@ -84,21 +94,47 @@ class DynamixelRobot:
             'pose2': {i:1800 for i in self.all_ids},
         }
 
-        # Build IK chains from URDFs
-        right_full = Chain.from_urdf_file(right_urdf)
-        r_names = [l.name for l in right_full.links]
-        r_start, r_end = r_names.index('j11'), r_names.index('j17')
-        right_links = right_full.links[r_start:r_end+2]
-        active_r = [True]*(len(right_links)-1) + [False]
+        # Load MuJoCo models for both arms
+        self.mj_model_r = mujoco.MjModel.from_xml_path("/home/kptal/actuator_sdk/urdf/right_arm.xml")
+        self.mj_data_r = mujoco.MjData(self.mj_model_r)
 
-        left_full = Chain.from_urdf_file(left_urdf)
-        l_names = [l.name for l in left_full.links]
-        l_start, l_end = l_names.index('j21'), l_names.index('j27')
-        left_links = left_full.links[l_start:l_end+2]
-        active_l = [True]*(len(left_links)-1) + [False]
+        self.mj_model_l = mujoco.MjModel.from_xml_path("/home/kptal/actuator_sdk/urdf/left_arm.xml")
+        self.mj_data_l = mujoco.MjData(self.mj_model_l)
 
-        self.chain_r = Chain(name='right_arm', links=right_links, active_links_mask=active_r)
-        self.chain_l = Chain(name='left_arm',  links=left_links,  active_links_mask=active_l)
+        if self.simulation_only:
+            self.viewer_r = mujoco.viewer.launch_passive(self.mj_model_r, self.mj_data_r,show_left_ui=False,show_right_ui=False)
+            self.viewer_l = mujoco.viewer.launch_passive(self.mj_model_l, self.mj_data_l,show_left_ui=False,show_right_ui=False)
+
+
+        # Configuration
+        self.config_r = mink.Configuration(self.mj_model_r)
+        self.config_l = mink.Configuration(self.mj_model_l)
+
+
+        self.task_r = mink.FrameTask(
+            frame_name="right_wrist_2",  # or whatever your end-effector body is
+            frame_type="body",
+            position_cost=1.0,
+            orientation_cost=0.0,
+            lm_damping=1.0,
+        )
+        self.task_l = mink.FrameTask(
+            frame_name="left_wrist_2",
+            frame_type="body",
+            position_cost=1.0,
+            orientation_cost=0.0,
+            lm_damping=1.0,
+        )
+        self.posture_r = mink.PostureTask(model=self.mj_model_r, cost=1e-2)
+        self.posture_l = mink.PostureTask(model=self.mj_model_l, cost=1e-2)
+
+        self.solver = "osqp"
+        self.rate = RateLimiter(frequency=40.0, warn=False)
+        self.max_iters = 20
+        self.pos_threshold = 0.005
+        self.dt = 1.0 / 40.0
+
+
 
     # ----------------------------------------------------------------------------
     # Torque control methods
@@ -176,15 +212,65 @@ class DynamixelRobot:
     def open_left_hand_gripper(self, pos=2048):   self.write_positions([self.grip_l],[pos])
     def close_left_hand_gripper(self, pos=1024):  self.write_positions([self.grip_l],[pos])
 
+    # def move_right_hand_cartesian(self, x, y, z):
+    #     angles = self.chain_r.inverse_kinematics([x,y,z])[1:1+len(self.right_ids)]
+    #     ticks  = [self._rad2tick(a) for a in angles]
+    #     self.write_positions(self.right_ids, ticks)
+
+    # def move_left_hand_cartesian(self, x, y, z):
+    #     angles = self.chain_l.inverse_kinematics([x,y,z])[1:1+len(self.left_ids)]
+    #     ticks  = [self._rad2tick(a) for a in angles]
+    #     self.write_positions(self.left_ids, ticks)
+
     def move_right_hand_cartesian(self, x, y, z):
-        angles = self.chain_r.inverse_kinematics([x,y,z])[1:1+len(self.right_ids)]
-        ticks  = [self._rad2tick(a) for a in angles]
-        self.write_positions(self.right_ids, ticks)
+        T_target = mink.SE3(wxyz_xyz=[0, 0, 0, 1, x, y, z])
+        self.task_r.set_target(T_target)
+        self.posture_r.set_target_from_configuration(self.config_r)
+
+        for i in range(self.max_iters):
+            vel = mink.solve_ik(self.config_r, [self.task_r, self.posture_r], self.dt, self.solver, 5e-3)
+            self.config_r.integrate_inplace(vel, self.dt)
+
+            # ✅ Update MuJoCo qpos
+            self.mj_data_r.qpos[:len(self.config_r.q)] = self.config_r.q
+            mujoco.mj_forward(self.mj_model_r, self.mj_data_r)
+
+            print(f"Step {i}, vel norm: {np.linalg.norm(vel)}")
+
+            if self.simulation_only:
+                self.viewer_r.sync()
+                self.rate.sleep()
+
+        if not self.simulation_only:
+            q = self.config_r.q[:len(self.right_ids)]
+            self.write_positions(self.right_ids, [self._rad2tick(angle) for angle in q])
+
 
     def move_left_hand_cartesian(self, x, y, z):
-        angles = self.chain_l.inverse_kinematics([x,y,z])[1:1+len(self.left_ids)]
-        ticks  = [self._rad2tick(a) for a in angles]
-        self.write_positions(self.left_ids, ticks)
+        T_target = mink.SE3(wxyz_xyz=[0, 0, 0, 1, x, y, z])
+        self.task_l.set_target(T_target)
+        self.posture_l.set_target_from_configuration(self.config_l)
+
+        for i in range(self.max_iters):
+            vel = mink.solve_ik(self.config_l, [self.task_l, self.posture_l], self.dt, self.solver, 5e-3)
+            self.config_l.integrate_inplace(vel, self.dt)
+
+            # ✅ Update MuJoCo qpos
+            self.mj_data_l.qpos[:len(self.config_l.q)] = self.config_l.q
+            mujoco.mj_forward(self.mj_model_l, self.mj_data_l)
+
+            print(f"Step {i}, vel norm: {np.linalg.norm(vel)}")
+
+            if self.simulation_only:
+                self.viewer_l.sync()
+                self.rate.sleep()
+
+        if not self.simulation_only:
+            q = self.config_l.q[:len(self.left_ids)]
+            self.write_positions(self.left_ids, [self._rad2tick(angle) for angle in q])
+
+
+
 
     # ----------------------------------------------------------------------------
     # Predefined pose shortcuts
@@ -261,3 +347,4 @@ class DynamixelRobot:
         print("\n📚 Saved Sequences:")
         for name, seq in self.saved_sequences.items():
             print(f" - {name}: {len(seq)} poses")
+
