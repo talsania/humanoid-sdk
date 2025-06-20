@@ -5,8 +5,8 @@ def main():
     print("🤖 Initializing Robot...")
 
     robot = DynamixelRobot(simulation_only=True)
-    robot.move_right_hand_cartesian(0.4, 0.3, 0.4)
-    robot.move_left_hand_cartesian(0, 0.0, 0)
+    robot.move_right_hand_cartesian(0.3, -0.3, -0.7)
+    # robot.move_left_hand_cartesian(0, 0.0, 0)
     time.sleep(10)
     # robot = DynamixelRobot("/dev/ttyUSB0")  # Update port if needed
 

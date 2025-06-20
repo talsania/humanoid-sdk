@@ -103,7 +103,7 @@ class DynamixelRobot:
 
         if self.simulation_only:
             self.viewer_r = mujoco.viewer.launch_passive(self.mj_model_r, self.mj_data_r,show_left_ui=False,show_right_ui=False)
-            # self.viewer_l = mujoco.viewer.launch_passive(self.mj_model_l, self.mj_data_l,show_left_ui=False,show_right_ui=False)
+            self.viewer_l = mujoco.viewer.launch_passive(self.mj_model_l, self.mj_data_l,show_left_ui=False,show_right_ui=False)
 
 
         # Configuration
@@ -115,14 +115,14 @@ class DynamixelRobot:
             frame_name="right_wrist_2",  # or whatever your end-effector body is
             frame_type="body",
             position_cost=1.0,
-            orientation_cost=1.0,
+            orientation_cost=1.0,  # <-- CHANGED
             lm_damping=1.0,
         )
         self.task_l = mink.FrameTask(
             frame_name="left_wrist_2",
             frame_type="body",
             position_cost=1.0,
-            orientation_cost=1.0,
+            orientation_cost=1.0,  # <-- CHANGED
             lm_damping=1.0,
         )
         self.posture_r = mink.PostureTask(model=self.mj_model_r, cost=1e-2)
@@ -212,10 +212,8 @@ class DynamixelRobot:
     def open_left_hand_gripper(self, pos=2048):   self.write_positions([self.grip_l],[pos])
     def close_left_hand_gripper(self, pos=1024):  self.write_positions([self.grip_l],[pos])
 
-    def move_right_hand_cartesian(self, x, y, z):
-        # Use a default neutral orientation (identity quaternion: w=1, x=0, y=0, z=0)
-        qw, qx, qy, qz = 0.0, 0.0, 0.0, 1.0
-        T_target = mink.SE3(wxyz_xyz=[qw, qx, qy, qz, x, y, z])
+    def move_right_hand_cartesian(self, x, y, z, qw, qx, qy, qz):
+        T_target = mink.SE3(wxyz_xyz=[qw, qx, qy, qz, x, y, z]) # <-- CHANGED
         self.task_r.set_target(T_target)
         self.posture_r.set_target_from_configuration(self.config_r)
 
@@ -238,10 +236,8 @@ class DynamixelRobot:
             self.write_positions(self.right_ids, [self._rad2tick(angle) for angle in q])
 
 
-    def move_left_hand_cartesian(self, x, y, z):
-        # Use a default neutral orientation (identity quaternion: w=1, x=0, y=0, z=0)
-        qw, qx, qy, qz = 1.0, 0.0, 0.0, 0.0
-        T_target = mink.SE3(wxyz_xyz=[qw, qx, qy, qz, x, y, z])
+    def move_left_hand_cartesian(self, x, y, z, qw, qx, qy, qz):
+        T_target = mink.SE3(wxyz_xyz=[qw, qx, qy, qz, x, y, z]) # <-- CHANGED
         self.task_l.set_target(T_target)
         self.posture_l.set_target_from_configuration(self.config_l)
 
