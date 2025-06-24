@@ -2,16 +2,16 @@
   <compiler angle="radian"/>
 
   <asset>
-    <mesh name="base_link" content_type="model/stl" file="base_link.STL"/>
-    <mesh name="right_shoulder_1" content_type="model/stl" file="right_shoulder_1.STL"/>
-    <mesh name="right_shoulder_2" content_type="model/stl" file="right_shoulder_2.STL"/>
-    <mesh name="right_shoulder_3" content_type="model/stl" file="right_shoulder_3.STL"/>
-    <mesh name="right_elbow_1" content_type="model/stl" file="right_elbow_1.STL"/>
-    <mesh name="right_elbow_2" content_type="model/stl" file="right_elbow_2.STL"/>
-    <mesh name="right_wrist_1" content_type="model/stl" file="right_wrist_1.STL"/>
-    <mesh name="right_wrist_2" content_type="model/stl" file="right_wrist_2.STL"/>
-    <mesh name="right_finger_1" content_type="model/stl" file="right_finger_1.STL"/>
-    <mesh name="right_finger_2" content_type="model/stl" file="right_finger_2.STL"/>
+    <mesh name="base_link" content_type="model/stl" file="meshes/base_link.STL"/>
+    <mesh name="right_shoulder_1" content_type="model/stl" file="meshes/right_shoulder_1.STL"/>
+    <mesh name="right_shoulder_2" content_type="model/stl" file="meshes/right_shoulder_2.STL"/>
+    <mesh name="right_shoulder_3" content_type="model/stl" file="meshes/right_shoulder_3.STL"/>
+    <mesh name="right_elbow_1" content_type="model/stl" file="meshes/right_elbow_1.STL"/>
+    <mesh name="right_elbow_2" content_type="model/stl" file="meshes/right_elbow_2.STL"/>
+    <mesh name="right_wrist_1" content_type="model/stl" file="meshes/right_wrist_1.STL"/>
+    <mesh name="right_wrist_2" content_type="model/stl" file="meshes/right_wrist_2.STL"/>
+    <mesh name="right_finger_1" content_type="model/stl" file="meshes/right_finger_1.STL"/>
+    <mesh name="right_finger_2" content_type="model/stl" file="meshes/right_finger_2.STL"/>
   </asset>
 
   <worldbody>

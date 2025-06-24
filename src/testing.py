@@ -1,84 +1,89 @@
 import time
-from humanoid_sdk import DynamixelRobot  # Replace with your actual module name
+import math
+from humanoid_sdk import DynamixelRobot
+import numpy as np
 
-def main():
-    print("🤖 Initializing Robot...")
+# Initialize Robot (Set simulation_only=False for hardware testing)
+robot = DynamixelRobot(simulation_only=True)
 
-    robot = DynamixelRobot(simulation_only=True)
-    robot.move_right_hand_cartesian(0.3, -0.3, -0.7)
-    # robot.move_left_hand_cartesian(0, 0.0, 0)
-    time.sleep(10)
-    # robot = DynamixelRobot("/dev/ttyUSB0")  # Update port if needed
+# Optional: Show robot joint info
+robot.debug_joint_info()
 
-    # print("\n🏠 Moving to home pose...")
-    # time.sleep(4)
+# ------------------- FK TESTING -------------------
 
-    # print("\n🚶 Moving to prepose...")
-    #   # robot.prepose()
-    # time.sleep(4)
+print("\n=== Forward Kinematics Tests ===")
 
-    # print("\n🕺 Pose 1 - Dance start!")
-    # robot.pose1()
-    # time.sleep(4)
+# Test 1: FK with tick values (right arm)
+right_ticks = [2048, 1800, 2200, 1900, 2100, 2000, 2048]
+fk_result = robot.perform_fk_right_arm(right_ticks, update_simulation=True)
+print("Right FK result:", fk_result)
+time.sleep(3)
 
-    # print("\n💃 Pose 2 - Dance end!")
-    # robot.pose2()
-    # time.sleep(4)
+# Test 2: FK with radians (left arm)
+left_radians = [-0.2, 0.3, -0.5, 0.2, -0.4, -0.1, -0.1]
+fk_result = robot.perform_fk_left_arm(left_radians, input_format='radians', update_simulation=True)
+print("Left FK result:", fk_result)
+time.sleep(3)
 
-    # print("\n🎯 Moving RIGHT arm in joint space...")
-    # robot.move_right_hand_joints(1600, 1700, 1800, 1900, 2000, 2100, 2200)
-    # time.sleep(4)
+# Test 3: FK for both arms
+both_joints = right_ticks + [2500, 2300, 1600, 2400, 1700, 2100, 1800]
+fk_result = robot.perform_fk_both_arms(both_joints, update_simulation=True)
+print("Both Arms FK:", fk_result)
+time.sleep(3)
 
-    # print("\n🎯 Moving LEFT arm in joint space...")
-    # robot.move_left_hand_joints(2200, 2100, 2000, 1900, 1800, 1700, 1600)
-    # time.sleep(4)
+# ------------------- IK TESTING -------------------
 
+print("\n=== Inverse Kinematics Tests ===")
 
-    # robot.simulate_right_ik_to(0.25, -0.1, 0.2)
-    # robot.simulate_left_ik_to(0.25, 0.1, 0.2)
+# Test 1: Position-only IK (Right hand)
+robot.move_right_hand_cartesian(0.3, -0.2, -0.4)
+time.sleep(3)
 
-    # print("\n🧭 Moving RIGHT arm in Cartesian space...")
-    # robot.move_right_hand_cartesian(0.2, -0.1, 0.3)
-    # time.sleep(5)
+# Test 2: IK with Euler angles
+robot.move_right_hand_cartesian(0.2, -0.3, -0.5, euler=(0.5, 0.2, 1.0))
+time.sleep(3)
 
-    # print("\n🧭 Moving LEFT arm in Cartesian space...")
-    # robot.move_left_hand_cartesian(0.2,  0.1, 0.3)
-    # time.sleep(5)
+# Test 3: IK with Quaternion
+robot.move_right_hand_cartesian(0.25, -0.25, -0.45, orientation=(0.7071, 0, 0, 0.7071))
+time.sleep(3)
 
-    # print("\n✋ Opening RIGHT gripper...")
-    # robot.open_right_hand_gripper()
-    # time.sleep(3)
+# ------------------- CONVERSION TESTING -------------------
 
-    # print("\n🤏 Closing RIGHT gripper...")
-    # robot.close_right_hand_gripper()
-    # time.sleep(3)
+print("\n=== Orientation Conversion Tests ===")
 
-    # print("\n✋ Opening LEFT gripper...")
-    # robot.open_left_hand_gripper()
-    # time.sleep(3)
+# Euler to Quaternion
+quat = robot.euler_to_quaternion(0.5, 0.3, 0.8)
+print("Euler to Quaternion:", quat)
+robot.move_right_hand_cartesian(0.2, -0.2, -0.4, orientation=quat)
+time.sleep(3)
 
-    # print("\n🤏 Closing LEFT gripper...")
-    # robot.close_left_hand_gripper()
-    # time.sleep(3)
+# Axis-Angle to Quaternion
+quat_axis = robot.axis_angle_to_quaternion([0, 0, 1], math.pi / 2)
+robot.move_right_hand_cartesian(0.3, -0.2, -0.4, orientation=quat_axis)
+time.sleep(3)
 
-    # print("\n Let's record a motion sequence!")
-    # robot.record_joint_poses(num_poses=2, sequence_name="student_wave")
+# Rotation Matrix to Quaternion
+rot_matrix = np.array([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
+quat_matrix = robot.rotation_matrix_to_quaternion(rot_matrix)
+robot.move_right_hand_cartesian(0.25, -0.3, -0.4, orientation=quat_matrix)
+time.sleep(3)
 
-    # print("\n📚 Listing saved sequences:")
-    # robot.list_saved_sequences()
+# ------------------- ROUND-TRIP TEST -------------------
 
-    # print("\n🔁 Playing back 'student_wave' sequence...")
-    # robot.play_saved_sequence("student_wave")
+print("\n=== FK -> IK Round Trip Test ===")
+test_joints = [1800, 1700, 2300, 1900, 2200, 2000, 2100]
+fk_result = robot.perform_fk_right_arm(test_joints, update_simulation=True)
 
-    # print("\n🔁 Returning to home pose...")
-    # robot.home()
-    # time.sleep(4)
+target_pos = fk_result['position']
+target_ori = fk_result['orientation']
 
-    print("\n✅ Demo complete! Robot is ready.")
+robot.move_right_hand_cartesian(*target_pos, orientation=target_ori)
+final_fk = robot.get_current_fk()
+final_pos = final_fk['right_arm']['position']
 
-    # Optionally disable torque at the end:
-    # for dxl_id in robot.all_ids:
-    #     robot.packet.write1ByteTxRx(robot.port, dxl_id, 64, 0)
+pos_error = np.linalg.norm(np.array(target_pos) - np.array(final_pos))
+print(f"Round-trip position error: {pos_error:.6f} meters")
 
-if __name__ == "__main__":
-    main()
+# ------------------- END -------------------
+
+print("\n=== Testing Complete ===")
