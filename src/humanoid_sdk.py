@@ -47,7 +47,7 @@ class DynamixelRobot:
         protocol_version: float = 2.0,
         right_urdf: str = 'urdf/right_arm_URDF.urdf',
         left_urdf:  str = 'urdf/left_arm_URDF.urdf',
-        simulation_only=False
+        simulation_only=True
     ):
 
         self.simulation_only = simulation_only
@@ -204,19 +204,21 @@ class DynamixelRobot:
         return (q[3], q[0], q[1], q[2])  # return as (w, x, y, z)
     
     @staticmethod
-    def rotation_matrix_to_quaternion(rotation_matrix):
+    def rpy_to_quaternion(roll_deg, pitch_deg, yaw_deg):
         """
-        Convert 3x3 rotation matrix to quaternion (w, x, y, z).
-        
-        Args:
-            rotation_matrix: 3x3 numpy array
-            
+        Convert roll, pitch, yaw (in degrees) to quaternion [x, y, z, w].
+
+        Parameters:
+        - roll_deg: Roll angle in degrees
+        - pitch_deg: Pitch angle in degrees
+        - yaw_deg: Yaw angle in degrees
+
         Returns:
-            tuple: (w, x, y, z) quaternion
+        - quat: List of quaternion values [x, y, z, w]
         """
-        rot = R.from_matrix(rotation_matrix)
-        q = rot.as_quat()  # scipy returns (x, y, z, w)
-        return (q[3], q[0], q[1], q[2])  # return as (w, x, y, z)
+        rpy_rad = np.radians([roll_deg, pitch_deg, yaw_deg])
+        quat = R.from_euler('xyz', rpy_rad).as_quat()
+        return quat.tolist()
 
     # ----------------------------------------------------------------------------
     # Torque control methods
@@ -355,6 +357,9 @@ class DynamixelRobot:
         Note: If both orientation and euler are provided, orientation takes precedence.
               If neither is provided, orientation is auto-computed from motion direction.
         """
+        x+=0.008047678000000003
+        y+=-0.3032837602360544
+        z+=-0.5864664231233935
         target_pos = np.array([x, y, z])
         if relative:
             # express target in world coords: home * Δpos
@@ -373,7 +378,10 @@ class DynamixelRobot:
         elif euler is not None:
             # Convert Euler angles to quaternion
             if len(euler) == 3:
-                qw, qx, qy, qz = self.euler_to_quaternion(euler[0], euler[1], euler[2])
+                euler[0]+=90
+                euler[1]+=0
+                euler[2]-=90
+                qw, qx, qy, qz = self.rpy_to_quaternion(euler[0], euler[1], euler[2])
             else:
                 raise ValueError("Euler angles should be a 3-element tuple (roll, pitch, yaw) in radians")
         else:
@@ -413,6 +421,7 @@ class DynamixelRobot:
             self.write_positions(self.right_ids,
                                  [self._rad2tick(a) for a in q])
 
+
     def move_left_hand_cartesian(self, x, y, z, relative=False, orientation=None, euler=None):
         """
         Move left hand to target position with optional orientation control.
@@ -426,6 +435,9 @@ class DynamixelRobot:
         Note: If both orientation and euler are provided, orientation takes precedence.
               If neither is provided, orientation is auto-computed from motion direction.
         """
+        x+=0.008047678000000003
+        y+=0.3032837602360544
+        z+=-0.5864664231233935
         # Build target in either world or relative-to-home coordinates
         target_delta = np.array([x, y, z])
         if relative:
@@ -444,7 +456,10 @@ class DynamixelRobot:
         elif euler is not None:
             # Convert Euler angles to quaternion
             if len(euler) == 3:
-                qw, qx, qy, qz = self.euler_to_quaternion(euler[0], euler[1], euler[2])
+                euler[0]+=-90
+                euler[1]+=0
+                euler[2]+=90
+                qw, qx, qy, qz = self.rpy_to_quaternion(euler[0], euler[1], euler[2])
             else:
                 raise ValueError("Euler angles should be a 3-element tuple (roll, pitch, yaw) in radians")
         else:
@@ -572,7 +587,7 @@ class DynamixelRobot:
     # ----------------------------------------------------------------------------
     # Forward Kinematics (FK) Methods (NEW)
     # ----------------------------------------------------------------------------
-    def perform_fk_right_arm(self, joint_values, input_format='ticks', update_simulation=False):
+    def perform_fk_right_arm(self, joint_values, input_format='ticks', update_simulation=True):
         """
         Perform Forward Kinematics for the right arm.
         
@@ -634,7 +649,7 @@ class DynamixelRobot:
             'orientation': quat_xyzw.tolist()
         }
     
-    def perform_fk_left_arm(self, joint_values, input_format='ticks', update_simulation=False):
+    def perform_fk_left_arm(self, joint_values, input_format='ticks', update_simulation=True):
         """
         Perform Forward Kinematics for the left arm.
         
@@ -696,7 +711,7 @@ class DynamixelRobot:
             'orientation': quat_xyzw.tolist()
         }
     
-    def perform_fk_both_arms(self, joint_values, input_format='ticks', update_simulation=False):
+    def perform_fk_both_arms(self, joint_values, input_format='ticks', update_simulation=True):
         """
         Perform Forward Kinematics for both arms.
         
