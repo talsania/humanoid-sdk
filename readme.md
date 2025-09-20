@@ -95,5 +95,3 @@ The environment is named `bmsdk` and includes dependencies like:
 * All `*.urdf` and mesh files are located in `urdf/` and `urdf/meshes/`.
 * Predefined poses (`home`, `prepose`, `pose1`, `pose2`) are built-in.
 * Use `record_joint_poses()` and `play_saved_sequence()` to program routines.
-
----
